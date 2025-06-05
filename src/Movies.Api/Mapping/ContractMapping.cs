@@ -48,7 +48,7 @@ public static class ContractMapping
         {
             Items = movies.Select(m => m.MapToResponse())
         };
-    }    
+    }
 
     public static IEnumerable<MovieRatingResponse> MapToResponse(this IEnumerable<MovieRating> ratings)
     {
@@ -57,6 +57,21 @@ public static class ContractMapping
             MovieId = r.MovieId,
             Slug = r.Slug,
             Rating = r.Rating
-        }); 
+        });
+    }
+
+    public static GetAllMoviesOptions MapToOptions(this GetAllMoviesRequest request)
+    {
+        return new GetAllMoviesOptions
+        {
+            Title = request.Title,
+            YearOfRelease = request.Year
+        };
+    }
+
+    public static GetAllMoviesOptions WithUserId(this GetAllMoviesOptions options, Guid? userId)
+    {
+        options.UserId = userId;
+        return options;
     }
 }
