@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Movies.Contracts.Responses;
+namespace Movies.Contracts.Responses.V1;
 
 public abstract class HalResponse
 {
