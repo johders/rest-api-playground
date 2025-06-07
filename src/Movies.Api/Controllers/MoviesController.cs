@@ -1,15 +1,15 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Movies.Api.Auth;
 using Movies.Api.Mapping;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
-using Movies.Contracts.Responses;
 
 namespace Movies.Api.Controllers;
 
-
 [ApiController]
+[ApiVersion(1.0)]
 public class MoviesController(IMovieService movieService) : ControllerBase
 {
     private readonly IMovieService _movieService = movieService;
@@ -25,9 +25,8 @@ public class MoviesController(IMovieService movieService) : ControllerBase
         return CreatedAtAction(nameof(Get), new { idOrSlug = movie.Id }, response);
     }
 
-
     [HttpGet(ApiEndpoints.Movies.Get)]
-    public async Task<IActionResult> Get([FromRoute] string idOrSlug, [FromServices] LinkGenerator linkGenerator, CancellationToken token)
+    public async Task<IActionResult> Get([FromRoute] string idOrSlug, CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
 
@@ -41,32 +40,9 @@ public class MoviesController(IMovieService movieService) : ControllerBase
         }
         var response = movie.MapToResponse();
 
-        var movieObj = new { id = movie.Id };
-        response.Links.Add(new Link
-        {
-            Href = linkGenerator.GetPathByAction(HttpContext, nameof(Get), values: new { idOrSlug = movie.Id })!,
-            Rel = "self",
-            Type = "GET"
-        });
-
-        response.Links.Add(new Link
-        {
-            Href = linkGenerator.GetPathByAction(HttpContext, nameof(Update), values: new { id = movie.Id })!,
-            Rel = "self",
-            Type = "PUT"
-        });
-
-        response.Links.Add(new Link
-        {
-            Href = linkGenerator.GetPathByAction(HttpContext, nameof(Delete), values: new { id = movie.Id })!,
-            Rel = "self",
-            Type = "DELETE"
-        });
-
         return Ok(response);
     }
-    
-    
+
     [HttpGet(ApiEndpoints.Movies.GetAll)]
     public async Task<IActionResult> GetAll([FromQuery] GetAllMoviesRequest request, CancellationToken token)
     {
