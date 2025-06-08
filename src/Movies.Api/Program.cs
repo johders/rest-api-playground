@@ -53,6 +53,19 @@ builder.Services.AddApiVersioning(x =>
     x.ApiVersionReader = new MediaTypeApiVersionReader("api-version");
 }).AddMvc().AddApiExplorer();
 
+//builder.Services.AddResponseCaching();
+builder.Services.AddOutputCache(x =>
+{
+    x.AddBasePolicy(c => c.Cache());
+    x.AddPolicy("MovieCache", c =>
+    {
+        c.Cache()
+            .Expire(TimeSpan.FromMinutes(1))
+            .SetVaryByQuery(new[] { "title", "yearOfRelease", "sortBy", "page", "pageSize" })
+            .Tag("movies");
+    });
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddHealthChecks().AddCheck<DatabaseHealthCheck>(DatabaseHealthCheck.Name);
@@ -72,7 +85,7 @@ if (app.Environment.IsDevelopment())
     {
         foreach (var description in app.DescribeApiVersions())
         {
-            x.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+            x.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);            
         }
     });
 }
@@ -83,6 +96,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+//app.UseCors();
+//app.UseResponseCaching();
+app.UseOutputCache();
 
 app.UseMiddleware<ValidationMappingMiddleware>();
 app.MapControllers();
