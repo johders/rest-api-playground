@@ -9,20 +9,20 @@ public static class DeleteMovieEndpoint
     public static IEndpointRouteBuilder MapDeleteMovie(this IEndpointRouteBuilder app)
     {
         app.MapDelete(ApiEndpoints.Movies.Delete, async (
-            Guid id, IMovieService movieService,
-            IOutputCacheStore outputCacheStore, CancellationToken token) =>
-        {
-            var deleted = await movieService.DeleteByIdAsync(id, token);
-
-            if (!deleted)
+                Guid id, IMovieService movieService,
+                IOutputCacheStore outputCacheStore, CancellationToken token) =>
             {
-                return Results.NotFound();
-            }
+                var deleted = await movieService.DeleteByIdAsync(id, token);
 
-            await outputCacheStore.EvictByTagAsync("movies", token);
-            return TypedResults.Ok();
-        })
-        .WithName(Name);
+                if (!deleted)
+                {
+                    return Results.NotFound();
+                }
+
+                await outputCacheStore.EvictByTagAsync("movies", token);
+                return TypedResults.Ok();
+            })
+            .WithName(Name);
         return app;
     }
 }
