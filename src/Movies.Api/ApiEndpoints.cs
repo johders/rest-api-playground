@@ -14,13 +14,11 @@ public static class ApiEndpoints
         public const string Delete = $"{Base}/{{id:guid}}";
         public const string Rate = $"{Base}/{{id:guid}}/ratings";
         public const string DeleteRating = $"{Base}/{{id:guid}}/ratings";
-
     }
 
     public static class Ratings
     {
         public const string Base = $"{ApiBase}/ratings";
-        public const string GetUserRatings = $"{ApiBase}/ratings/me";
-        
+        public const string GetUserRatings = $"{ApiBase}/ratings/me"; 
     }
 }
