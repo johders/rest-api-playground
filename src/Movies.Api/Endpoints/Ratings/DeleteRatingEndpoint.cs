@@ -17,7 +17,8 @@ public static class DeleteRatingEndpoint
 
                 return result ? TypedResults.Ok() : Results.NotFound();
             })
-            .WithName(Name);
+            .WithName(Name)
+            .RequireAuthorization();
         return app;
     }
 }

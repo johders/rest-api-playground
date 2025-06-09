@@ -30,7 +30,8 @@ public static class UpdateMovieEndPoint
                 var response = updatedMovie.MapToResponse();
                 return TypedResults.Ok(response);
             })
-            .WithName(Name);
+            .WithName(Name)
+            .RequireAuthorization(AuthConstants.TrustedMemberPolicyName);
         return app;
     }
 }

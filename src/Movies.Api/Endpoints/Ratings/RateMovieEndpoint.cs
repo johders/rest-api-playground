@@ -14,12 +14,13 @@ public static class RateMovieEndpoint
                 Guid id, RateMovieRequest request, IRatingService ratingService,
                 HttpContext context, CancellationToken token) =>
             {
-            var userId = context.GetUserId();
-            var result = await ratingService.RateMovieAsync(id, request.Rating, userId!.Value, token);
+                var userId = context.GetUserId();
+                var result = await ratingService.RateMovieAsync(id, request.Rating, userId!.Value, token);
 
-            return result ? TypedResults.Ok() : Results.NotFound();
+                return result ? TypedResults.Ok() : Results.NotFound();
             })
-            .WithName(Name);
+            .WithName(Name)
+            .RequireAuthorization();
         return app;
     }
 }
