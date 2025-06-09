@@ -6,10 +6,9 @@ public static class MovieEndpointExtensions
         app.MapGetMovie();
         app.MapCreateMovie();
         app.MapGetAllMovies();
-        /*
         app.MapUpdateMovie();
         app.MapDeleteMovie();
-        */
+        
         return app;   
     }
 }
