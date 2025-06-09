@@ -54,22 +54,22 @@ public class MoviesController(IMovieService movieService, IOutputCacheStore outp
         return Ok(response);
     }
 
-    [HttpGet(ApiEndpoints.Movies.GetAll)]
-    [OutputCache(PolicyName = "MovieCache")]
-    //[ResponseCache(Duration = 30, VaryByQueryKeys = new[]{ "title", "yearOfRelease", "sortBy", "page", "pageSize" }, VaryByHeader = "Accept, Accept-Encoding", Location = ResponseCacheLocation.Any)]
-    [ProducesResponseType(typeof(MoviesResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllMoviesRequest request, CancellationToken token)
-    {
-        var userId = HttpContext.GetUserId();
-        var options = request.MapToOptions()
-            .WithUserId(userId);
+    // [HttpGet(ApiEndpoints.Movies.GetAll)]
+    // [OutputCache(PolicyName = "MovieCache")]
+    // //[ResponseCache(Duration = 30, VaryByQueryKeys = new[]{ "title", "yearOfRelease", "sortBy", "page", "pageSize" }, VaryByHeader = "Accept, Accept-Encoding", Location = ResponseCacheLocation.Any)]
+    // [ProducesResponseType(typeof(MoviesResponse), StatusCodes.Status200OK)]
+    // public async Task<IActionResult> GetAll([FromQuery] GetAllMoviesRequest request, CancellationToken token)
+    // {
+    //     var userId = HttpContext.GetUserId();
+    //     var options = request.MapToOptions()
+    //         .WithUserId(userId);
 
-        var movies = await _movieService.GetAllAsync(options, token);
-        var movieCount = await _movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
+    //     var movies = await _movieService.GetAllAsync(options, token);
+    //     var movieCount = await _movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
 
-        var moviesResponse = movies.MapToResponse(request.Page, request.PageSize, movieCount);
-        return Ok(moviesResponse);
-    }
+    //     var moviesResponse = movies.MapToResponse(request.Page, request.PageSize, movieCount);
+    //     return Ok(moviesResponse);
+    // }
 
 
     [Authorize(AuthConstants.TrustedMemberPolicyName)]
