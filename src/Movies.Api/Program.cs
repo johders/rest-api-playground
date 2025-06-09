@@ -85,6 +85,8 @@ builder.Services.AddDatabase(config["Database:ConnectionString"]!);
 
 var app = builder.Build();
 
+app.CreateApiVersionSet();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -92,7 +94,7 @@ if (app.Environment.IsDevelopment())
     {
         foreach (var description in app.DescribeApiVersions())
         {
-            x.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);            
+            x.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
         }
     });
 }

@@ -31,6 +31,8 @@ public static class GetMovieEndpoint
             })
             .Produces<MovieResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
+            .WithApiVersionSet(ApiVersioning.VersionSet)
+            .HasApiVersion(1.0)
             .WithName(Name);
         return app;
     }

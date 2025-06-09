@@ -28,8 +28,32 @@ public static class GetAllMoviesEndpoint
                         movieCount);
                     return TypedResults.Ok(moviesResponse);
                 })
+                .WithName($"{Name}V1")
                 .Produces<MovieResponse>(StatusCodes.Status200OK)
-                .WithName(Name);
+                .WithApiVersionSet(ApiVersioning.VersionSet)
+                .HasApiVersion(1.0);
+
+        app.MapGet(ApiEndpoints.Movies.GetAll, async (
+                [AsParameters] GetAllMoviesRequest request, IMovieService movieService,
+                HttpContext context, CancellationToken token) =>
+                {
+                    var userId = context.GetUserId();
+                    var options = request.MapToOptions()
+                        .WithUserId(userId);
+
+                    var movies = await movieService.GetAllAsync(options, token);
+                    var movieCount = await movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
+
+                    var moviesResponse = movies.MapToResponse(
+                        request.Page.GetValueOrDefault(PagedRequest.DefaultPage),
+                        request.PageSize.GetValueOrDefault(PagedRequest.DefaultPageSize),
+                        movieCount);
+                    return TypedResults.Ok(moviesResponse);
+                })
+                .WithName($"{Name}V2")
+                .Produces<MovieResponse>(StatusCodes.Status200OK)
+                .WithApiVersionSet(ApiVersioning.VersionSet)
+                .HasApiVersion(2.0);
         return app;
     }
 }
