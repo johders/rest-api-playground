@@ -31,7 +31,8 @@ public static class GetAllMoviesEndpoint
                 .WithName($"{Name}V1")
                 .Produces<MovieResponse>(StatusCodes.Status200OK)
                 .WithApiVersionSet(ApiVersioning.VersionSet)
-                .HasApiVersion(1.0);
+                .HasApiVersion(1.0)
+                .CacheOutput("MovieCache");
 
         app.MapGet(ApiEndpoints.Movies.GetAll, async (
                 [AsParameters] GetAllMoviesRequest request, IMovieService movieService,
@@ -53,7 +54,8 @@ public static class GetAllMoviesEndpoint
                 .WithName($"{Name}V2")
                 .Produces<MovieResponse>(StatusCodes.Status200OK)
                 .WithApiVersionSet(ApiVersioning.VersionSet)
-                .HasApiVersion(2.0);
+                .HasApiVersion(2.0)
+                .CacheOutput("MovieCache");
         return app;
     }
 }
