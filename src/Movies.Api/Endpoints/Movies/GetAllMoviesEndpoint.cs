@@ -2,6 +2,7 @@ using Movies.Api.Auth;
 using Movies.Api.Mapping;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
+using Movies.Contracts.Responses;
 
 namespace Movies.Api.Endpoints.Movies;
 
@@ -13,20 +14,21 @@ public static class GetAllMoviesEndpoint
         app.MapGet(ApiEndpoints.Movies.GetAll, async (
                 [AsParameters] GetAllMoviesRequest request, IMovieService movieService,
                 HttpContext context, CancellationToken token) =>
-            {
-                var userId = context.GetUserId();
-                var options = request.MapToOptions()
-                    .WithUserId(userId);
+                {
+                    var userId = context.GetUserId();
+                    var options = request.MapToOptions()
+                        .WithUserId(userId);
 
-                var movies = await movieService.GetAllAsync(options, token);
-                var movieCount = await movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
+                    var movies = await movieService.GetAllAsync(options, token);
+                    var movieCount = await movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
 
-                var moviesResponse = movies.MapToResponse(
-                    request.Page.GetValueOrDefault(PagedRequest.DefaultPage),
-                    request.PageSize.GetValueOrDefault(PagedRequest.DefaultPageSize),
-                    movieCount);
-                return TypedResults.Ok(moviesResponse);
-            })
+                    var moviesResponse = movies.MapToResponse(
+                        request.Page.GetValueOrDefault(PagedRequest.DefaultPage),
+                        request.PageSize.GetValueOrDefault(PagedRequest.DefaultPageSize),
+                        movieCount);
+                    return TypedResults.Ok(moviesResponse);
+                })
+                .Produces<MovieResponse>(StatusCodes.Status200OK)
                 .WithName(Name);
         return app;
     }

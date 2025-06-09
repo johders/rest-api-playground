@@ -7,48 +7,48 @@ using Movies.Application.Services;
 using Movies.Contracts.Requests;
 using Movies.Contracts.Responses;
 
-namespace Movies.Api.Controllers;
+// namespace Movies.Api.Controllers;
 
-[ApiController]
-[ApiVersion(1.0)]
-public class RatingsController(IRatingService ratingService) : ControllerBase
-{
-    private readonly IRatingService _ratingService = ratingService;
+// [ApiController]
+// [ApiVersion(1.0)]
+// public class RatingsController(IRatingService ratingService) : ControllerBase
+// {
+//     private readonly IRatingService _ratingService = ratingService;
 
-    [Authorize]
-    [HttpPut(ApiEndpoints.Movies.Rate)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> RateMovie([FromRoute] Guid id, [FromBody] RateMovieRequest request, CancellationToken token)
-    {
-        var userId = HttpContext.GetUserId();
-        var result = await _ratingService.RateMovieAsync(id, request.Rating, userId!.Value, token);
+//     [Authorize]
+//     [HttpPut(ApiEndpoints.Movies.Rate)]
+//     [ProducesResponseType(StatusCodes.Status200OK)]
+//     [ProducesResponseType(StatusCodes.Status404NotFound)]
+//     public async Task<IActionResult> RateMovie([FromRoute] Guid id, [FromBody] RateMovieRequest request, CancellationToken token)
+//     {
+//         var userId = HttpContext.GetUserId();
+//         var result = await _ratingService.RateMovieAsync(id, request.Rating, userId!.Value, token);
 
-        return result ? Ok() : NotFound();
-    }
+//         return result ? Ok() : NotFound();
+//     }
 
-    [Authorize]
-    [HttpDelete(ApiEndpoints.Movies.DeleteRating)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteRating([FromRoute] Guid id, CancellationToken token)
-    {
-        var userId = HttpContext.GetUserId();
-        var result = await _ratingService.DeleteRatingAsync(id, userId!.Value, token);
+//     [Authorize]
+//     [HttpDelete(ApiEndpoints.Movies.DeleteRating)]
+//     [ProducesResponseType(StatusCodes.Status200OK)]
+//     [ProducesResponseType(StatusCodes.Status404NotFound)]
+//     public async Task<IActionResult> DeleteRating([FromRoute] Guid id, CancellationToken token)
+//     {
+//         var userId = HttpContext.GetUserId();
+//         var result = await _ratingService.DeleteRatingAsync(id, userId!.Value, token);
 
-        return result ? Ok() : NotFound();
-    }
+//         return result ? Ok() : NotFound();
+//     }
 
-    [Authorize]
-    [HttpGet(ApiEndpoints.Ratings.GetUserRatings)]
-    [ProducesResponseType(typeof(IEnumerable<MovieRatingResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUserRatings(CancellationToken token)
-    {
-        var userId = HttpContext.GetUserId();
-        var ratings = await _ratingService.GetRatingsForUserAsync(userId!.Value, token);
-        var ratingsResponse = ratings.MapToResponse();
+//     [Authorize]
+//     [HttpGet(ApiEndpoints.Ratings.GetUserRatings)]
+//     [ProducesResponseType(typeof(IEnumerable<MovieRatingResponse>), StatusCodes.Status200OK)]
+//     public async Task<IActionResult> GetUserRatings(CancellationToken token)
+//     {
+//         var userId = HttpContext.GetUserId();
+//         var ratings = await _ratingService.GetRatingsForUserAsync(userId!.Value, token);
+//         var ratingsResponse = ratings.MapToResponse();
 
-        return Ok(ratingsResponse);
-    }
+//         return Ok(ratingsResponse);
+//     }
 
-}
+// }
